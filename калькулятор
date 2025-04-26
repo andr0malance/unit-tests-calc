@@ -1,0 +1,67 @@
+using System;
+
+public class Calculator
+{
+    public double CurrentValue { get; private set; }
+    public double MemoryValue { get; private set; }
+    public string LastOperation { get; private set; }
+
+    public Calculator()
+    {
+        CurrentValue = 0;
+        MemoryValue = 0;
+        LastOperation = "";
+    }
+
+    public void EnterNumber(double number)
+    {
+        CurrentValue = number;
+    }
+
+    public void PerformOperation(string operation)
+    {
+        switch (operation)
+        {
+            case "+":
+                CurrentValue += CurrentValue;
+                break;
+            case "-":
+                CurrentValue -= CurrentValue;
+                break;
+            case "*":
+                CurrentValue *= CurrentValue;
+                break;
+            case "/":
+                if (CurrentValue == 0)
+                {
+                    throw new DivideByZeroException();
+                }
+                CurrentValue /= CurrentValue;
+                break;
+            default:
+                throw new ArgumentException("Unknown operation");
+        }
+        LastOperation = operation;
+    }
+
+    public void MemoryStore()
+    {
+        MemoryValue = CurrentValue;
+    }
+
+    public void MemoryRecall()
+    {
+        CurrentValue = MemoryValue;
+    }
+
+    public void MemoryClear()
+    {
+        MemoryValue = 0;
+    }
+
+    public void Clear()
+    {
+        CurrentValue = 0;
+        LastOperation = "";
+    }
+}
