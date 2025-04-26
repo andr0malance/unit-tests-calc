@@ -1,0 +1,96 @@
+using System;
+using System.Windows.Forms;
+
+namespace калькулятор
+{
+    public partial class Form1 : Form
+    {
+        private Calculator _calculator = new Calculator();
+        private bool _newInput = true;
+
+        public Form1()
+        {
+            InitializeComponent();
+            UpdateDisplay();
+        }
+
+        private void UpdateDisplay()
+        {
+            txtDisplay.Text = _calculator.CurrentValue.ToString();
+        }
+
+        private void btnNumber_Click(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            var digit = button.Text;
+
+            if (_newInput)
+            {
+                txtDisplay.Text = "0";
+                _newInput = false;
+            }
+
+            if (txtDisplay.Text == "0" && digit != ".")
+                txtDisplay.Text = digit;
+            else
+                txtDisplay.Text += digit;
+
+            _calculator.EnterNumber(double.Parse(txtDisplay.Text));
+        }
+
+        private void btnOperator_Click(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            
+            try
+            {
+                _calculator.PerformOperation(button.Text);
+                UpdateDisplay();
+                _newInput = true;
+            }
+            catch (DivideByZeroException)
+            {
+                MessageBox.Show("Cannot divide by zero!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _calculator.Clear();
+                UpdateDisplay();
+            }
+        }
+
+        private void btnEquals_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _calculator.PerformOperation(_calculator.LastOperation);
+                UpdateDisplay();
+                _newInput = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            _calculator.Clear();
+            UpdateDisplay();
+            _newInput = true;
+        }
+
+        private void btnMemoryStore_Click(object sender, EventArgs e)
+        {
+            _calculator.MemoryStore();
+        }
+
+        private void btnMemoryRecall_Click(object sender, EventArgs e)
+        {
+            _calculator.MemoryRecall();
+            UpdateDisplay();
+        }
+
+        private void btnMemoryClear_Click(object sender, EventArgs e)
+        {
+            _calculator.MemoryClear();
+        }
+    }
+}
