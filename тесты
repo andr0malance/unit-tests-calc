@@ -1,0 +1,50 @@
+using Xunit;
+
+public class тесты
+{
+    [Fact]
+    public void TestAddition()
+    {
+        var calc = new Calculator();
+        calc.EnterNumber(5);
+        calc.PerformOperation("+");
+        Assert.Equal(10, calc.CurrentValue);
+    }
+
+    [Fact]
+    public void TestDivisionByZero()
+    {
+        var calc = new Calculator();
+        calc.EnterNumber(5);
+        Assert.Throws<DivideByZeroException>(() => calc.PerformOperation("/"));
+    }
+
+    [Fact]
+    public void TestMemoryOperations()
+    {
+        var calc = new Calculator();
+        calc.EnterNumber(42);
+        calc.MemoryStore();
+        calc.EnterNumber(0);
+        calc.MemoryRecall();
+        Assert.Equal(42, calc.CurrentValue);
+    }
+
+    [Fact]
+    public void TestInvalidOperation()
+    {
+        var calc = new Calculator();
+        calc.EnterNumber(5);
+        Assert.Throws<ArgumentException>(() => calc.PerformOperation("invalid"));
+    }
+
+    [Fact]
+    public void TestClear()
+    {
+        var calc = new Calculator();
+        calc.EnterNumber(123);
+        calc.Clear();
+        Assert.Equal(0, calc.CurrentValue);
+        Assert.Equal("", calc.LastOperation);
+    }
+}
